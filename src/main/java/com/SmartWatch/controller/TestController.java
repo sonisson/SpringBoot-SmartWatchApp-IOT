@@ -8,28 +8,18 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "http://localhost:3000")
 public class TestController {
 
-    @GetMapping("/test")
+    @GetMapping("/test-connection")
     public ResponseEntity<?> testConnection() {
-        return ResponseEntity.ok("Kết nối thành công");
+        return ResponseEntity.ok("Kết nối thành công.");
     }
 
-    @GetMapping("/test/login")
+    @GetMapping("/test-login")
     public ResponseEntity<?> testLogin() {
-        return ResponseEntity.ok("Bạn đã đăng nhập.");
+        return ResponseEntity.ok("Đăng nhập thành công.");
     }
 
-    @GetMapping("/test/admin")
-    public ResponseEntity<?> testAdminApi() {
-        return ResponseEntity.ok("Bạn đã đăng nhập với quyền admin.");
-    }
-
-    @GetMapping("/test/user")
+    @GetMapping("/test-user")
     public ResponseEntity<?> testUserApi() {
-        return ResponseEntity.ok("Bạn đã đăng nhập với quyền user.");
-    }
-
-    @GetMapping("/test/watcher")
-    public ResponseEntity<?> testWatchApi() {
-        return ResponseEntity.ok("Bạn đã đăng nhập với quyền watcher.");
+        return ResponseEntity.ok("Đăng nhập thành công với quyền user.");
     }
 }

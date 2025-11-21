@@ -12,6 +12,7 @@ import java.util.List;
 public class UserDetailsImpl implements UserDetails {
     private final String username;
     private final String password;
+    private final boolean isActive;
     private final Collection<? extends GrantedAuthority> authorities;
 
     public UserDetailsImpl(UserEntity userEntity) {
@@ -19,6 +20,7 @@ public class UserDetailsImpl implements UserDetails {
         authorities.add(new SimpleGrantedAuthority(userEntity.getRole()));
         this.username = userEntity.getUsername();
         this.password = userEntity.getPassword();
+        this.isActive = userEntity.isActive();
         this.authorities = authorities;
     }
 
@@ -54,6 +56,6 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return isActive;
     }
 }

@@ -1,0 +1,15 @@
+package com.SmartWatch.repository;
+
+import com.SmartWatch.entity.DeviceEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Optional;
+
+@Repository
+public interface DeviceRepository extends JpaRepository<DeviceEntity, String> {
+    List<DeviceEntity> findByUserEntityUsername(String username);
+
+    Optional<DeviceEntity> findById(String id);
+}

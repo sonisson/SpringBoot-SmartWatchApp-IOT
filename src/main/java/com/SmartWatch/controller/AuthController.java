@@ -29,21 +29,19 @@ public class AuthController {
     private UserRepository userRepository;
 
     @PostMapping("/auth/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         try {
-            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            return ResponseEntity.ok(userService.login(loginRequest.getUsername()));
+            return userService.login(request.getUsername());
         } catch (Exception e) {
             return ResponseEntity.status(401).body(new ErrorResponse("INVALID_CREDENTIALS", "Tên đăng nhập hoặc mật khẩu không đúng."));
         }
     }
 
     @PostMapping("/auth/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest, HttpServletResponse response) {
-        if (userRepository.existsByUsername(registerRequest.getUsername())) {
-            return ResponseEntity.status(409).body(new ErrorResponse("USER_EXISTS", "Username đã tồn tại."));
-        }
-        return ResponseEntity.ok(userService.register(registerRequest));
+    public ResponseEntity<?> register(@RequestBody RegisterRequest request, HttpServletResponse response) {
+        if (request == null) return ResponseEntity.status(400).body(new ErrorResponse("BAD_REQUEST", "Sai tham số."));
+        return userService.register(request);
     }
 }

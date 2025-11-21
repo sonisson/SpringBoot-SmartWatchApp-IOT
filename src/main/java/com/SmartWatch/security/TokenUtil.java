@@ -34,7 +34,7 @@ public class TokenUtil {
     public String generateJwt(UserEntity userEntity) {
         SecretKey secretKey = Keys.hmacShaKeyFor(jwtSecret.getBytes());
         String username = userEntity.getUsername();
-        String role = "ROLE_"+userEntity.getRole().toUpperCase();
+        String role = "ROLE_" + userEntity.getRole().toUpperCase();
         return Jwts.builder()
                 .subject(username)
                 .claim("role", role)

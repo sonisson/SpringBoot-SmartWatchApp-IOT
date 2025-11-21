@@ -3,6 +3,11 @@ package com.SmartWatch.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "user")
@@ -26,4 +31,29 @@ public class UserEntity {
     @Column(name = "role")
     private String role;
 
+    @CreationTimestamp
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @Column(name = "is_active")
+    private boolean isActive;
+
+    @OneToMany(mappedBy = "userEntity")
+    private List<DeviceEntity> deviceEntityList;
+
+    @OneToMany(mappedBy = "careUserEntity")
+    private List<UserRelationEntity> patientRelationEntityList;
+
+    @OneToMany(mappedBy = "patientUserEntity")
+    private List<UserRelationEntity> careRelationEntityList;
+
+    @OneToMany(mappedBy = "userEntity")
+    private List<RecordEntity> recordEntityList;
+
+    @OneToMany(mappedBy = "userEntity")
+    private List<FallEventEntity> fallEventEntityList;
 }

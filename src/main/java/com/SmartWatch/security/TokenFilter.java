@@ -1,7 +1,5 @@
 package com.SmartWatch.security;
 
-import com.SmartWatch.model.response.ErrorResponse;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -24,10 +22,10 @@ public class TokenFilter extends OncePerRequestFilter {
 
         String authHeader = request.getHeader("Authorization");
         String accessToken = null;
-        if(authHeader!=null&& authHeader.startsWith("Bearer ")) {
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
             accessToken = authHeader.substring(7);
         }
-        if(accessToken!=null) {
+        if (accessToken != null) {
             try {
                 tokenUtil.setContext(accessToken);
             } catch (JwtException e) {

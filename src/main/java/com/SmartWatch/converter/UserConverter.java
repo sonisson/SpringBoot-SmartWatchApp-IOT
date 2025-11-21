@@ -2,8 +2,8 @@ package com.SmartWatch.converter;
 
 import com.SmartWatch.entity.UserEntity;
 import com.SmartWatch.model.request.RegisterRequest;
+import com.SmartWatch.model.response.GetUserResponse;
 import com.SmartWatch.model.response.LoginResponse;
-import com.SmartWatch.model.response.RegisterResponse;
 import com.SmartWatch.security.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,39 +18,32 @@ public class UserConverter {
     @Autowired
     private TokenUtil tokenUtil;
 
-    public UserEntity toUserEntity(RegisterRequest registerRequest){
-        UserEntity userEntity=new UserEntity();
+    public UserEntity toUserEntity(RegisterRequest registerRequest) {
+        UserEntity userEntity = new UserEntity();
         userEntity.setUsername(registerRequest.getUsername());
         userEntity.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         userEntity.setName(registerRequest.getName());
-        userEntity.setRole(registerRequest.getRole());
+        userEntity.setRole("USER");
+        userEntity.setActive(true);
         return userEntity;
     }
 
-    public RegisterResponse toRegisterResponse(UserEntity userEntity){
-        RegisterResponse registerResponse=new RegisterResponse();
-        RegisterResponse.Data data=new RegisterResponse.Data();
-        RegisterResponse.Data.User user=new RegisterResponse.Data.User();
-        user.setId(userEntity.getId());
-        user.setUsername(userEntity.getUsername());
-        user.setName(userEntity.getName());
-        user.setRole(userEntity.getRole());
-        data.setUser(user);
-        registerResponse.setData(data);
-        return registerResponse;
+    public LoginResponse toLoginResponse(UserEntity userEntity) {
+        LoginResponse loginResponse = new LoginResponse();
+        loginResponse.setToken(tokenUtil.generateJwt(userEntity));
+        loginResponse.setUser(toGetUserResponse(userEntity));
+        return loginResponse;
     }
 
-    public LoginResponse toLoginResponse(UserEntity userEntity){
-        LoginResponse loginResponse=new LoginResponse();
-        LoginResponse.Data data=new LoginResponse.Data();
-        data.setToken(tokenUtil.generateJwt(userEntity));
-        LoginResponse.Data.User user=new LoginResponse.Data.User();
-        user.setId(userEntity.getId());
-        user.setUsername(userEntity.getUsername());
-        user.setName(userEntity.getName());
-        user.setRole(userEntity.getRole());
-        data.setUser(user);
-        loginResponse.setData(data);
-        return loginResponse;
+    public GetUserResponse toGetUserResponse(UserEntity userEntity) {
+        GetUserResponse response = new GetUserResponse();
+        response.setId(userEntity.getId());
+        response.setUsername(userEntity.getUsername());
+        response.setRole(userEntity.getRole());
+        response.setName(userEntity.getName());
+        response.setCreateAt(userEntity.getCreatedAt());
+        response.setUpdateAt(userEntity.getUpdatedAt());
+        response.setActive(userEntity.isActive());
+        return response;
     }
 }

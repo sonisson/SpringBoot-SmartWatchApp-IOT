@@ -22,7 +22,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        ErrorResponse errorResponse=new ErrorResponse("ACCESS_DENIED", "Bạn không có quyền truy cập.");
+        ErrorResponse errorResponse = new ErrorResponse("ACCESS_DENIED", "Bạn không có quyền truy cập.");
         ObjectMapper mapper = new ObjectMapper();
         response.getWriter().write(mapper.writeValueAsString(errorResponse));
     }

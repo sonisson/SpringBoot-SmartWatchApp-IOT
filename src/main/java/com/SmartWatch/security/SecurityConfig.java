@@ -43,16 +43,13 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/test/login").authenticated()
-                        .requestMatchers("/api/test/user").hasRole("USER")
-                        .requestMatchers("/api/test/admin").hasRole("ADMIN")
-                        .requestMatchers("/api/test/watcher").hasRole("WATCHER")
+                        .requestMatchers("/api/test-login").authenticated()
+                        .requestMatchers("/api/test-user", "/api/register-device", "/api/get-devices", "/api/get-fall-events", "/api/get-records", "/api/save-record", "/api/get-following", "/api/get-followers", "/api/invite", "/api/accept", "/api/reject").hasRole("USER")
                         .anyRequest().permitAll())
                 .exceptionHandling(ex -> ex
                         .accessDeniedHandler(accessDeniedHandler)
                         .authenticationEntryPoint(authenticationEntryPoint)
                 )
-
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session
