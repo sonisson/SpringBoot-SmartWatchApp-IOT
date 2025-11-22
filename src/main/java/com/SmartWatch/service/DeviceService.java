@@ -4,7 +4,6 @@ import com.SmartWatch.converter.DeviceConverter;
 import com.SmartWatch.entity.DeviceEntity;
 import com.SmartWatch.entity.UserEntity;
 import com.SmartWatch.model.request.RegisterDeviceRequest;
-import com.SmartWatch.model.response.ErrorResponse;
 import com.SmartWatch.repository.DeviceRepository;
 import com.SmartWatch.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -273,11 +273,11 @@ Lấy thông tin ngã
 ```
 
 ### POST /invite
-Mời theo dõi 
+Yêu cầu theo dõi 
 #### Request:
 ```bash
 {
-    "username": "user2"
+    "username": "user1"
 }
 ```
 #### Response:
@@ -309,7 +309,7 @@ Mời theo dõi
 ```
 
 ### POST /accept
-Chấp nhận lời mời
+Chấp nhận yêu cầu
 #### Request:
 ```bash
 {
@@ -345,7 +345,7 @@ Chấp nhận lời mời
 ```
 
 ### POST /reject
-Từ chối lời mời
+Từ chối yêu cầu
 #### Request:
 ```bash
 {
@@ -456,3 +456,50 @@ Lấy danh sách following
     message: "error_message"
 }
 ```
+
+### Socket
+Nhận thông tin sức khỏe hoặc sự kiện ngã
+
+#### Connect
+```bash
+http://localhost:8080/ws
+```
+#### Subscribe
+```bash
+/topic/patient/{username}
+```
+#### Response
+```bash
+{
+    "type": "RECORD",
+    "data": {
+        "id": 2,
+        "userId": 1,
+        "deviceId": "device-001",
+        "spo2": 101,
+        "heartRate": 0,
+        "signalQuality": "fair",
+        "battery": 45,
+        "recordedAt": "2025-11-21T22:50:00",
+        "syncedAt": null
+    }
+}
+```
+```bash
+{
+    "type": "FALL_EVENT",
+    "data": {
+        "id": 4,
+        "userId": 1,
+        "deviceId": "device-001",
+        "severity": "severe",
+        "spo2": 88,
+        "heartRate": 132,
+        "longitude": 105.8412,
+        "latitude": 21.2045,
+        "status": "status",
+        "detectedAt": "2025-11-21T22:50:00"
+    }
+}
+```
+

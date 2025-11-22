@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserRelationService {
@@ -38,10 +37,12 @@ public class UserRelationService {
         return ResponseEntity.ok(userRelationConverter.toGetUserRelationResponseList(userRelationEntityList));
     }
 
-    public ResponseEntity<?> invite(InviteRequest request, String patientUsername) {
-        UserRelationEntity userRelationEntity = userRelationRepository.findByCareUserEntityUsernameAndPatientUserEntityUsername(request.getUsername(), patientUsername);
+    public ResponseEntity<?> invite(InviteRequest request, String careUsername) {
+        String patientUsername = request.getUsername();
+        if(careUsername.equals(patientUsername)) return ResponseEntity.status(409).body(new ErrorResponse("CONFLICT", "Không thể tự mời."));
+        UserRelationEntity userRelationEntity = userRelationRepository.findByCareUserEntityUsernameAndPatientUserEntityUsername(careUsername, patientUsername);
         if (userRelationEntity == null) {
-            UserEntity careUserEntity = userRepository.findByUsername(request.getUsername());
+            UserEntity careUserEntity = userRepository.findByUsername(careUsername);
             UserEntity patientUserEntity = userRepository.findByUsername(patientUsername);
             if (careUserEntity == null || patientUserEntity == null)
                 return ResponseEntity.status(404).body(new ErrorResponse("NOT_FOUND", "User không tồn tại."));
@@ -53,12 +54,11 @@ public class UserRelationService {
     }
 
     public ResponseEntity<?> accept(AcceptRequest request, String username) {
-        Optional<UserRelationEntity> userRelationEntityOptional = userRelationRepository.findById(request.getUserRelationId());
-        UserRelationEntity userRelationEntity = null;
-        if (userRelationEntityOptional.isPresent()) {
-            userRelationEntity = userRelationEntityOptional.get();
-            if (!userRelationEntity.getCareUserEntity().getUsername().equals(username))
+        UserRelationEntity userRelationEntity = userRelationRepository.findById(request.getUserRelationId()).orElse(null);
+        if (userRelationEntity != null) {
+            if (!userRelationEntity.getPatientUserEntity().getUsername().equals(username)) {
                 return ResponseEntity.status(401).body(new ErrorResponse("FORBIDDEN", "Không có quyền truy cập"));
+            }
         } else {
             return ResponseEntity.status(404).body(new ErrorResponse("NOT_FOUND", "Dữ liệu không tồn tại"));
         }
@@ -68,12 +68,11 @@ public class UserRelationService {
     }
 
     public ResponseEntity<?> reject(RejectRequest request, String username) {
-        Optional<UserRelationEntity> userRelationEntityOptional = userRelationRepository.findById(request.getUserRelationId());
-        UserRelationEntity userRelationEntity = null;
-        if (userRelationEntityOptional.isPresent()) {
-            userRelationEntity = userRelationEntityOptional.get();
-            if (!userRelationEntity.getCareUserEntity().getUsername().equals(username))
-                return ResponseEntity.status(401).body(new ErrorResponse("ERROR", "Không có quyền."));
+        UserRelationEntity userRelationEntity = userRelationRepository.findById(request.getUserRelationId()).orElse(null);
+        if (userRelationEntity != null) {
+            if (!userRelationEntity.getPatientUserEntity().getUsername().equals(username)) {
+                return ResponseEntity.status(401).body(new ErrorResponse("FORBIDDEN", "Không có quyền truy cập"));
+            }
         } else {
             return ResponseEntity.status(404).body(new ErrorResponse("NOT_FOUND", "Dữ liệu không tồn tại"));
         }

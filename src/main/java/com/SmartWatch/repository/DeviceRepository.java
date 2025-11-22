@@ -10,6 +10,4 @@ import java.util.Optional;
 @Repository
 public interface DeviceRepository extends JpaRepository<DeviceEntity, String> {
     List<DeviceEntity> findByUserEntityUsername(String username);
-
-    Optional<DeviceEntity> findById(String id);
 }

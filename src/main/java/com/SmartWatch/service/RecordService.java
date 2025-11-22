@@ -6,12 +6,15 @@ import com.SmartWatch.entity.RecordEntity;
 import com.SmartWatch.entity.UserEntity;
 import com.SmartWatch.model.request.SaveRecordRequest;
 import com.SmartWatch.model.response.ErrorResponse;
+import com.SmartWatch.model.response.GetRecordResponse;
+import com.SmartWatch.model.response.SocketResponse;
 import com.SmartWatch.repository.DeviceRepository;
 import com.SmartWatch.repository.RecordRepository;
 import com.SmartWatch.repository.UserRelationRepository;
 import com.SmartWatch.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,6 +38,12 @@ public class RecordService {
     @Autowired
     private DeviceRepository deviceRepository;
 
+    private final SimpMessagingTemplate messagingTemplate;
+
+    public RecordService(SimpMessagingTemplate messagingTemplate) {
+        this.messagingTemplate = messagingTemplate;
+    }
+
     public ResponseEntity<?> getRecords(String careUsername, String patientUsername) {
         boolean followed = careUsername.equals(patientUsername) || userRelationRepository.existsByCareUserEntityUsernameAndPatientUserEntityUsernameAndStatus(careUsername, patientUsername, "accepted");
         if (!followed)
@@ -45,11 +54,11 @@ public class RecordService {
 
     public ResponseEntity<?> saveRecord(SaveRecordRequest request, String username) {
         UserEntity userEntity = userRepository.findByUsername(username);
-        Optional<DeviceEntity> deviceEntityOptional = deviceRepository.findById(request.getDeviceId());
-        DeviceEntity deviceEntity = null;
-        if (deviceEntityOptional.isPresent()) deviceEntity = deviceEntityOptional.get();
+        DeviceEntity deviceEntity = deviceRepository.findById(request.getDeviceId()).orElse(null);
         RecordEntity recordEntity = recordConverter.toRecordEntity(request, userEntity, deviceEntity);
         recordEntity = recordRepository.save(recordEntity);
-        return ResponseEntity.status(201).body(recordConverter.toGetRecordResponse(recordEntity));
+        GetRecordResponse response = recordConverter.toGetRecordResponse(recordEntity);
+        messagingTemplate.convertAndSend("/topic/patient/" +username, new SocketResponse<>("RECORD", response));
+        return ResponseEntity.status(201).body(response);
     }
 }
