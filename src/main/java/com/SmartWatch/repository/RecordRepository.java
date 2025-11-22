@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface RecordRepository extends JpaRepository<RecordEntity, Long> {
-    List<RecordEntity> findByUserEntityUsername(String username);
+    List<RecordEntity> findTop10ByUserEntityUsernameOrderByRecordedAtDesc(String username);
 }

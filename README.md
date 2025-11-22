@@ -100,6 +100,33 @@ Kiểm tra phân quyền
 }
 ```
 
+### GET /search-user?username=user
+Tìm kiếm user
+
+#### Response:
+```bash
+[
+    {
+        "id": 1,
+        "username": "user1",
+        "name": "User 1",
+        "role": "USER",
+        "createAt": "2025-11-22T01:18:33",
+        "updateAt": "2025-11-22T01:18:33",
+        "active": true
+    },
+    {
+        "id": 2,
+        "username": "user2",
+        "name": "User 2",
+        "role": "USER",
+        "createAt": "2025-11-22T01:44:38",
+        "updateAt": "2025-11-22T01:44:38",
+        "active": true
+    }
+]
+```
+
 ### POST /register-device
 Đăng ký thiết bị
 #### Request:
@@ -175,6 +202,7 @@ Lưu thông tin sức khỏe
 
 ### GET /get-records?username=user1
 Lấy thông tin sức khỏe
+> Note: lấy 10 bản ghi mới nhất
 #### Response:
 ```bash
 [
@@ -225,6 +253,7 @@ Lưu thông tin ngã
 
 ### GET /get-fall-events?username=user1
 Lấy thông tin ngã
+> Note: lấy 10 bản ghi mới nhất
 #### Response:
 ```bash
 [

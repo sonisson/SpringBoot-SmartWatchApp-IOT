@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class UserConverter {
 
@@ -45,5 +48,14 @@ public class UserConverter {
         response.setUpdateAt(userEntity.getUpdatedAt());
         response.setActive(userEntity.isActive());
         return response;
+    }
+
+    public List<GetUserResponse> toGetUserResponseList(List<UserEntity> userEntityList) {
+        List<GetUserResponse> responseList = new ArrayList<>();
+        for(UserEntity userEntity:userEntityList){
+            GetUserResponse response=toGetUserResponse(userEntity);
+            responseList.add(response);
+        }
+        return responseList;
     }
 }

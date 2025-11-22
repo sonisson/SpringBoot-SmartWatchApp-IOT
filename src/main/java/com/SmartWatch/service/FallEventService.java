@@ -39,7 +39,7 @@ public class FallEventService {
         boolean followed = careUsername.equals(patientUsername) || userRelationRepository.existsByCareUserEntityUsernameAndPatientUserEntityUsernameAndStatus(careUsername, patientUsername, "accepted");
         if (!followed)
             return ResponseEntity.status(403).body(new ErrorResponse("FORBIDDEN", "Không có quyền truy cập."));
-        List<FallEventEntity> fallEventEntityList = fallEventRepository.findByUserEntityUsername(patientUsername);
+        List<FallEventEntity> fallEventEntityList = fallEventRepository.findTop10ByUserEntityUsernameOrderByDetectedAtDesc(patientUsername);
         return ResponseEntity.ok(fallEventConverter.toGetFallEventResponseList(fallEventEntityList));
     }
 

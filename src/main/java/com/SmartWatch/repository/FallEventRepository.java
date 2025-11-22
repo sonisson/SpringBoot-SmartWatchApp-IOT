@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface FallEventRepository extends JpaRepository<FallEventEntity, Long> {
-    List<FallEventEntity> findByUserEntityUsername(String username);
+    List<FallEventEntity> findTop10ByUserEntityUsernameOrderByDetectedAtDesc(String username);
 }

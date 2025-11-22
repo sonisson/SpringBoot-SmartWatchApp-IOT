@@ -39,7 +39,7 @@ public class RecordService {
         boolean followed = careUsername.equals(patientUsername) || userRelationRepository.existsByCareUserEntityUsernameAndPatientUserEntityUsernameAndStatus(careUsername, patientUsername, "accepted");
         if (!followed)
             return ResponseEntity.status(403).body(new ErrorResponse("FORBIDDEN", "Không có quyền truy cập."));
-        List<RecordEntity> recordEntityList = recordRepository.findByUserEntityUsername(patientUsername);
+        List<RecordEntity> recordEntityList = recordRepository.findTop10ByUserEntityUsernameOrderByRecordedAtDesc(patientUsername);
         return ResponseEntity.ok(recordConverter.toGetRecordResponseList(recordEntityList));
     }
 

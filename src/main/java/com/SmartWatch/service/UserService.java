@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService {
 
@@ -30,5 +32,10 @@ public class UserService {
     public ResponseEntity<?> login(String username) {
         UserEntity userEntity = userRepository.findByUsername(username);
         return ResponseEntity.ok(userConverter.toLoginResponse(userEntity));
+    }
+
+    public ResponseEntity<?> getUsers(String username) {
+        List<UserEntity> userEntityList = userRepository.findByUsernameContainingIgnoreCase(username);
+        return ResponseEntity.ok(userConverter.toGetUserResponseList(userEntityList));
     }
 }
